@@ -41,6 +41,8 @@ router.post('/register', async (req, res) => {
                 {maxAge: msInYear, httpOnly: true})
             .cookie('refresh-token', refreshToken,
                 {maxAge: msInYear, httpOnly: true})
+            .cookie('username', user.name,
+                {maxAge: msInYear, httpOnly: true})
             .send()
     } catch (err) {
         console.log(err)
@@ -65,6 +67,8 @@ router.post('/login', async (req, res) => {
             {maxAge: msInYear, httpOnly: true})
         .cookie('refresh-token', refreshToken,
             {maxAge: msInYear, httpOnly: true})
+        .cookie('username', user.name,
+            {maxAge: msInYear, httpOnly: true})
         .send()
 })
 
@@ -78,8 +82,9 @@ router.post('/logout', auth, async (req, res) => {
     user.cancelRefreshToken(refreshToken)
     await user.save()
     res
-        .clearCookie('access-token', {httpOnly: true, secure: true})
-        .clearCookie('refresh-token', {httpOnly: true, secure: true})
+        .clearCookie('access-token', {httpOnly: true})
+        .clearCookie('refresh-token', {httpOnly: true})
+        .clearCookie('username', {httpOnly: true})
         .send()
 })
 
